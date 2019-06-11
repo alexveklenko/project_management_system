@@ -1,0 +1,35 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}Projects{% endblock title %}
+
+{% block content %}
+
+  <div class="d-flex align-items-center">
+    <h1 class="h2 mt-2 mr-4 d-inline-block">Projects</h1>
+    <a href="{% url 'new_project' %}" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New project</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+          <tr>
+            <td>{{ project.id }}</td>
+            <td><a href="{% url 'project' project.id %}">{{ project.title }}</a></td>
+            <td>{{ project.author }}</td>
+            <td>{{ project.status }}</td>
+          </tr>
+        {% endfor %}            
+      </tbody>
+    </table>
+  </div>
+
+{% endblock content %}

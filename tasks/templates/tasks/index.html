@@ -1,0 +1,43 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}Tasks{% endblock title %}
+
+{% block content %}
+
+  <div class="d-flex align-items-center">
+    <h1 class="h2 mt-2 mr-4 d-inline-block">Tasks</h1>
+    <a href="#" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New task</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Project</th>
+          <th>Assigned to</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Estimated time</th>
+          <th>Spent time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.id }}</td>
+            <td><a href="#">{{ task.title }}</a></td>
+            <td><a href="{% url 'project' task.project.id %}">{{ task.project }}</a></td>
+            <td>{{ task.assigned_to }}</td>
+            <td>{{ task.status }}</td>
+            <td>{{ task.priority }}</td>
+            <td>{{ task.estimated_time }}</td>
+            <td>{{ task.spent_time }}</td>
+          </tr>
+        {% endfor %}            
+      </tbody>
+    </table>
+  </div>
+
+{% endblock content %}
