@@ -26,7 +26,7 @@
         {% for task in tasks %}
           <tr>
             <td>{{ task.id }}</td>
-            <td><a href="#">{{ task.title }}</a></td>
+            <td><a href="{% url 'task' task.id %}">{{ task.title }}</a></td>
             <td>{{ task.author }}</td>
             <td>{{ task.status }}</td>
           </tr>

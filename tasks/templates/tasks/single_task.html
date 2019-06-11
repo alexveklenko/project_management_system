@@ -1,0 +1,12 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}Task | {{ task.title }}{% endblock title %}
+
+{% block content %}
+
+  <div class="d-flex align-items-center">
+      <h1 class="mt-2 mr-4 d-inline-block">{{ task.title }}</h1>
+      <a href="#" class="btn btn-secondary btn-sm"><span data-feather="edit" class="mr-2"></span>Edit task</a>
+  </div>
+
+{% endblock content %}
