@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
+from django.contrib import messages
 
 from .models import Project
 from tasks.models import Task
@@ -14,7 +15,7 @@ def index(request):
 
 def project_view(request, id):
     project = get_object_or_404(Project, id=id)
-    tasks = Task.objects.all().filter(project=id)
+    tasks = Task.objects.filter(project=id)
     return render(request, 'projects/single_project.html', {'project': project, 'tasks': tasks})
 
 
@@ -25,6 +26,8 @@ def new_project(request):
             project = form.save(commit=False)
             project.author = request.user
             project.save()
+            messages.add_message(request, messages.INFO,
+                                 'Project "{}" was successfully created')
             return redirect('/projects')
     else:
         form = ProjectForm()
@@ -39,6 +42,8 @@ def edit_project(request, id):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.INFO,
+                                 'Project "{}" was successfully updated'.format(project.title))
             return redirect(reverse('project', args=[project.id]))
     else:
         form = ProjectForm(instance=project)

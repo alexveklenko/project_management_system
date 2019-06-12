@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from .models import Task
+from .forms import TaskForm
 
 
 def index(request):
@@ -11,3 +12,7 @@ def index(request):
 def task_view(request, id):
     task = Task.objects.get(id=id)
     return render(request, 'tasks/single_task.html', {'task': task})
+
+
+def new_task(request):
+    return render(request, 'tasks/new_task.html', {'form': TaskForm})
