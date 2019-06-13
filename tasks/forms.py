@@ -5,10 +5,7 @@ from .models import Task
 
 
 class TaskForm(ModelForm):
-    assigned_to = ModelChoiceField(
-        queryset=User.objects.filter(projects__id=1)
-    )
-
     class Meta:
         model = Task
-        fields = ['title', 'body', 'assigned_to', 'estimated_time', ]
+        fields = ['title', 'body', 'assigned_to',
+                  'estimated_time', 'status', 'priority', ]

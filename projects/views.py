@@ -27,7 +27,7 @@ def new_project(request):
             project.author = request.user
             project.save()
             messages.add_message(request, messages.INFO,
-                                 'Project "{}" was successfully created')
+                                 'Project "{}" was successfully created'.format(project.title))
             return redirect('/projects')
     else:
         form = ProjectForm()
