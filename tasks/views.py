@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 from .models import Task
 from .forms import TaskForm
+from projects.forms import TaskForm as ProjectTaskForm
 from projects.models import Project
 
 
@@ -38,6 +39,23 @@ def new_task(request):
     }
 
     return render(request, 'tasks/new_task.html', context)
+
+
+def edit_task(request, id):
+    task = Task.objects.get(id=id)
+
+    if request.method == 'POST':
+        pass
+    else:
+        print('*'*100)
+        print(task.project.id)
+        form = ProjectTaskForm(project_id=task.project.id, instance=task)
+
+    context = {
+        'task': task,
+        'form': form
+    }
+    return render(request, 'tasks/edit_task.html', context)
 
 
 def ajax_get_members(request):
