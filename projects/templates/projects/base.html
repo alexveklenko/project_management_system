@@ -51,13 +51,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% if 'projects' in request.path %}active{% endif %}" href="{% url 'projects' %}">
+                <a class="nav-link {% if 'projects' in request.path %}active{% endif %}" href="{% url 'projects:projects' %}">
                   <span data-feather="archive"></span>
                   Projects
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% if 'tasks' in request.path %}active{% endif %}" href="{% url 'tasks' %}">
+                <a class="nav-link {% if '/tasks/' == request.path %}active{% endif %}" href="{% url 'tasks:tasks' %}">
                   <span data-feather="layers"></span>
                   Tasks
                 </a>
@@ -90,13 +90,13 @@
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="{% static 'bootstrap-4.3.1/js/bootstrap.bundle.min.js' %}" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    {% comment %} <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script> {% endcomment %}
+    <script src="{% static 'bootstrap-4.3.1/js/bootstrap.bundle.min.js' %}" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
     <script src="{% static 'dashboard/dashboard.js' %}"></script>
-
-    {{ form.media }}
+    {% block extra_media %}{% endblock extra_media %}    
   </body>
 </html>

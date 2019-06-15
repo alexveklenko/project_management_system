@@ -6,7 +6,7 @@
 
   <div class="d-flex align-items-center">
     <h1 class="h2 mt-2 mr-4 d-inline-block">Projects</h1>
-    <a href="{% url 'new_project' %}" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New project</a>
+    <a href="{% url 'projects:new_project' %}" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New project</a>
   </div>
 
   <div class="table-responsive">
@@ -23,7 +23,7 @@
         {% for project in projects %}
           <tr>
             <td>{{ project.id }}</td>
-            <td><a href="{% url 'project' project.id %}">{{ project.title }}</a></td>
+            <td><a href="{% url 'projects:project' project.id %}">{{ project.title }}</a></td>
             <td>{{ project.author }}</td>
             <td>{{ project.status }}</td>
           </tr>

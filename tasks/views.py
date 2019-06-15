@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.forms import ModelForm, ModelChoiceField
+from django import forms
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
+from django.http import JsonResponse
 
 from .models import Task
 from .forms import TaskForm
@@ -10,7 +11,7 @@ from projects.models import Project
 
 
 def index(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.all().order_by('-id')
     return render(request, 'tasks/index.html', {'tasks': tasks})
 
 
@@ -20,21 +21,31 @@ def task_view(request, id):
 
 
 def new_task(request):
-    project = Project.objects.get(id=request.GET['project_id'])
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.author = request.user
-            task.project = project
-            messages.add_message(request, messages.INFO,
-                                 'Task "{}" was successfully created in project "{}"'.format(task.title, project.title))
             task.save()
-            return redirect(reverse('project', args=[project.id]))
-        pass
+        messages.add_message(request, messages.INFO,
+                             'Task "{}" was successfully created in project "{}"'.format(task.title, task.project))
+        return redirect(reverse('tasks:tasks'))
     else:
         form = TaskForm()
-        form.fields['assigned_to'].queryset = User.objects.filter(
-            projects__id=project.id)
 
-    return render(request, 'tasks/new_task.html', {'form': form})
+    context = {
+        'form': form
+    }
+
+    return render(request, 'tasks/new_task.html', context)
+
+
+def ajax_get_members(request):
+    members = User.objects.filter(projects__id=request.GET['project_id'])
+    choices = '<option value="" selected>---------</option>'
+
+    for member in members:
+        choices += '<option value="{}">{}</option>'.format(
+            member.id, member.username)
+
+    return JsonResponse({'markup': choices})

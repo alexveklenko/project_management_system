@@ -5,9 +5,27 @@
 
 {% block content %}
     <h1 class="mt-2">New task</h1>
-    <form method="post">
+    <form method="post" class="task-form">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Create task</button>
     </form>
 {% endblock content %}
+
+{% block extra_media %}
+    {{ form.media }}
+
+    <script>
+        $('.task-form select[name="project"]').on("change", function() {
+            $.ajax({
+                url: "{% url 'tasks:ajax_get_members' %}",
+                data: {
+                    project_id: $(this).val()
+                },
+                success: function(data) {
+                    $('select#id_assigned_to').html(data.markup)
+                }
+            });
+        });
+    </script>
+{% endblock extra_media %}

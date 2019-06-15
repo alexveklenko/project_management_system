@@ -6,7 +6,7 @@
 
   <div class="d-flex align-items-center">
     <h1 class="mt-2 mr-4 d-inline-block">{{ project.title }}</h1>
-    <a href="{% url 'edit_project' project.id %}" class="btn btn-secondary btn-sm">
+    <a href="{% url 'projects:edit_project' project.id %}" class="btn btn-secondary btn-sm">
       <span data-feather="edit" class="mr-2"></span>Edit project
     </a>
   </div>
@@ -14,7 +14,7 @@
 
   <div class="d-flex align-items-center">
     <h2 class="d-inline-block mr-4">List of tasks</h2>
-    <a href="{% url 'new_task' %}?project_id={{ project.id }}" class="btn btn-secondary btn-sm">
+    <a href="{% url 'projects:new_task' project.id %}" class="btn btn-secondary btn-sm">
       <span data-feather="plus-circle" class="mr-2"></span>New task
     </a>
   </div>
@@ -33,11 +33,11 @@
         {% for task in tasks %}
           <tr>
             <td>{{ task.id }}</td>
-            <td><a href="{% url 'task' task.id %}">{{ task.title }}</a></td>
+            <td><a href="{% url 'tasks:task' task.id %}">{{ task.title }}</a></td>
             <td>{{ task.author }}</td>
             <td>{{ task.status }}</td>
           </tr>
-        {% endfor %}            
+        {% endfor %}
       </tbody>
     </table>
   </div>
