@@ -5,6 +5,7 @@ from django_select2.forms import Select2Widget
 
 from .models import Task
 from projects.models import Project
+from time_entries.models import TimeEntry
 
 
 class TaskForm(ModelForm):
@@ -17,3 +18,9 @@ class TaskForm(ModelForm):
         model = Task
         fields = ['title', 'body', 'project', 'assigned_to',
                   'estimated_time', 'status', 'priority', ]
+
+
+class LogTimeForm(ModelForm):
+    class Meta:
+        model = TimeEntry
+        fields = ['comment', 'spent_time', ]

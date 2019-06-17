@@ -31,6 +31,7 @@ class Project(models.Model):
         related_name='projects',
         blank=True
     )
+    spent_time = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

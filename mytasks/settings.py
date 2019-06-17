@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'projects',
     'tasks',
+    'time_entries',
     'crispy_forms',
     'django_select2',
 ]

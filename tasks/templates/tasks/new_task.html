@@ -13,8 +13,6 @@
 {% endblock content %}
 
 {% block extra_media %}
-    {{ form.media }}
-
     <script>
         $('.task-form select[name="project"]').on("change", function() {
             $.ajax({
