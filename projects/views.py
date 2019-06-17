@@ -2,15 +2,34 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.models import User
 
-from .models import Project
+from .models import Project, Status
 from tasks.models import Task
 from .forms import ProjectForm, TaskForm
 
 
 def index(request):
+    print('*'*100)
+    print(request.GET)
+
     projects = Project.objects.all().order_by('-id')
-    return render(request, 'projects/index.html', {'projects': projects})
+    users = User.objects.all()
+    statuses = Status.objects.all()
+
+    f_search = request.GET.get('search', '')
+
+    if f_search:
+        projects = projects.filter(title__icontains=f_search)
+
+    context = {
+        'projects': projects,
+        'users': users,
+        'statuses': statuses,
+        'f_search': f_search
+    }
+
+    return render(request, 'projects/index.html', context)
 
 
 def project_view(request, id):
