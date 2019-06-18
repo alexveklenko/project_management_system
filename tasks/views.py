@@ -13,8 +13,29 @@ from time_entries.models import TimeEntry
 
 
 def index(request):
-    tasks = Task.objects.all().order_by('-id')
-    return render(request, 'tasks/index.html', {'tasks': tasks})
+    tasks = Task.objects.order_by('-id')
+    projects = Project.objects.all()
+
+    f_search = request.GET.get('search', '')
+    f_project = request.GET.get('project')
+
+    selected_project = None
+
+    if f_search:
+        tasks = tasks.filter(title__icontains=f_search)
+
+    if f_project and f_project != 'all':
+        selected_project = int(f_project)
+        tasks = tasks.filter(project__id=selected_project)
+    print(selected_project)
+    context = {
+        'tasks': tasks,
+        'projects': projects,
+        'f_search': f_search,
+        'selected_project': selected_project
+    }
+
+    return render(request, 'tasks/index.html', context)
 
 
 def task_view(request, id):

@@ -5,7 +5,7 @@
 {% block content %}
 
   <div class="d-flex align-items-center mb-4">
-    <h1 class="h2 mt-2 mr-4 d-inline-block">Projects</h1>
+    <h1 class="mt-2 mr-4 d-inline-block">Projects</h1>
     <a href="{% url 'projects:new_project' %}" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New project</a>
   </div>
 
@@ -19,7 +19,7 @@
            value="{{ f_search }}">
 
     <select name="author" class="select form-control mr-2">
-      <option value="all">Author</option>
+      <option value="all">All authors</option>
       {% for user in users %}
         <option value="{{ user.id }}" {% if selected_author == user.id %}selected{% endif %}>
           {{ user.username }}
@@ -28,7 +28,7 @@
     </select>
 
     <select name="member" class="select form-control mr-2">
-      <option value="all" selected>Member</option>
+      <option value="all" selected>All members</option>
       {% for user in users %}
         <option value="{{ user.id }}" {% if selected_member == user.id %}selected{% endif %}>
           {{ user.username }}
@@ -37,7 +37,7 @@
     </select>
 
     <select name="status" class="select form-control mr-2">
-      <option value="all" selected>Status</option>
+      <option value="all" selected>All statuses</option>
       {% for status in statuses %}
         <option value="{{ status.id }}" {% if selected_status == status.id %}selected{% endif %}>
           {{ status.title }}
