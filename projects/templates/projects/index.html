@@ -19,23 +19,29 @@
            value="{{ f_search }}">
 
     <select name="author" class="select form-control mr-2">
-      <option value="all" selected>Author</option>
+      <option value="all">Author</option>
       {% for user in users %}
-        <option value="{{ user.id }}">{{ user.username }}</option>
+        <option value="{{ user.id }}" {% if selected_author == user.id %}selected{% endif %}>
+          {{ user.username }}
+        </option>
       {% endfor %}
     </select>
 
-    <select name="members" class="select form-control mr-2">
-      <option value="all" selected>Members</option>
+    <select name="member" class="select form-control mr-2">
+      <option value="all" selected>Member</option>
       {% for user in users %}
-        <option value="{{ user.id }}">{{ user.username }}</option>
+        <option value="{{ user.id }}" {% if selected_member == user.id %}selected{% endif %}>
+          {{ user.username }}
+        </option>
       {% endfor %}
     </select>
 
     <select name="status" class="select form-control mr-2">
       <option value="all" selected>Status</option>
       {% for status in statuses %}
-        <option value="{{ status.id }}">{{ status.title }}</option>
+        <option value="{{ status.id }}" {% if selected_status == status.id %}selected{% endif %}>
+          {{ status.title }}
+        </option>
       {% endfor %}
     </select>
 

@@ -4,7 +4,7 @@ from .models import TimeEntry
 
 
 def index(request):
-    time_entries = TimeEntry.objects.all()
+    time_entries = TimeEntry.objects.order_by('-id')
     context = {
         'time_entries': time_entries
     }

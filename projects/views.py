@@ -10,23 +10,41 @@ from .forms import ProjectForm, TaskForm
 
 
 def index(request):
-    print('*'*100)
-    print(request.GET)
-
-    projects = Project.objects.all().order_by('-id')
+    projects = Project.objects.order_by('-id')
     users = User.objects.all()
     statuses = Status.objects.all()
 
     f_search = request.GET.get('search', '')
+    f_author = request.GET.get('author')
+    f_member = request.GET.get('member')
+    f_status = request.GET.get('status')
+    selected_author = None
+    selected_member = None
+    selected_status = None
 
     if f_search:
         projects = projects.filter(title__icontains=f_search)
+
+    if f_author and f_author != 'all':
+        selected_author = int(f_author)
+        projects = projects.filter(author=f_author)
+
+    if f_member and f_member != 'all':
+        selected_member = int(f_member)
+        projects = projects.filter(members=f_member)
+
+    if f_status and f_status != 'all':
+        selected_status = int(f_status)
+        projects = projects.filter(status=f_status)
 
     context = {
         'projects': projects,
         'users': users,
         'statuses': statuses,
-        'f_search': f_search
+        'f_search': f_search,
+        'selected_author': selected_author,
+        'selected_member': selected_member,
+        'selected_status': selected_status,
     }
 
     return render(request, 'projects/index.html', context)
