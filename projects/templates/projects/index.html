@@ -6,7 +6,9 @@
 
   <div class="d-flex align-items-center mb-4">
     <h1 class="mt-2 mr-4 d-inline-block">Projects</h1>
-    <a href="{% url 'projects:new_project' %}" class="btn btn-secondary btn-sm"><span data-feather="plus-circle" class="mr-2"></span>New project</a>
+    <a href="{% url 'projects:new_project' %}" class="btn btn-secondary btn-sm">
+      <span data-feather="plus-circle" class="mr-2"></span>New project
+    </a>
   </div>
 
   <form method="get" class="form-inline mb-2">
@@ -45,7 +47,12 @@
       {% endfor %}
     </select>
 
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-primary mr-2">
+      <span data-feather="filter" class="mr-2"></span>Filter
+    </button>
+    <a href="{% url 'projects:projects' %}" class="btn btn-danger">
+      <span data-feather="delete" class="mr-2"></span>Reset
+    </a>
   </form>
 
   {% if projects %}

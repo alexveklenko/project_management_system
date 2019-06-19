@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
-from .models import Task
+from .models import Task, Status, Priority
 from .forms import TaskForm, LogTimeForm
 from projects.forms import TaskForm as ProjectTaskForm
 from projects.models import Project
@@ -15,11 +16,22 @@ from time_entries.models import TimeEntry
 def index(request):
     tasks = Task.objects.order_by('-id')
     projects = Project.objects.all()
+    statuses = Status.objects.all()
+    priorities = Priority.objects.all()
+    users = User.objects.all()
 
     f_search = request.GET.get('search', '')
     f_project = request.GET.get('project')
+    f_status = request.GET.get('status')
+    f_priority = request.GET.get('priority')
+    f_author = request.GET.get('author')
+    f_member = request.GET.get('member')
 
     selected_project = None
+    selected_status = None
+    selected_priority = None
+    selected_author = None
+    selected_member = None
 
     if f_search:
         tasks = tasks.filter(title__icontains=f_search)
@@ -27,12 +39,54 @@ def index(request):
     if f_project and f_project != 'all':
         selected_project = int(f_project)
         tasks = tasks.filter(project__id=selected_project)
-    print(selected_project)
+
+    if f_status and f_status != 'all':
+        selected_status = int(f_status)
+        tasks = tasks.filter(status=selected_status)
+
+    if f_priority and f_priority != 'all':
+        selected_priority = int(f_priority)
+        tasks = tasks.filter(priority=selected_priority)
+
+    if f_author and f_author != 'all':
+        selected_author = int(f_author)
+        projects = projects.filter(author=f_author)
+
+    if f_member and f_member != 'all':
+        selected_member = int(f_member)
+        projects = projects.filter(members=f_member)
+
+    paginator = Paginator(tasks, 2)
+    page = request.GET.get('page')
+    tasks = paginator.get_page(page)
+
+    is_paginated = tasks.has_other_pages()
+    full_path = request.get_full_path()
+
+    if tasks.has_previous():
+        prev_url = f'?page={tasks.previous_page_number()}'
+    else:
+        prev_url = ''
+
+    if tasks.has_next():
+        next_url = f'?page={tasks.next_page_number()}'
+    else:
+        next_url = ''
+
     context = {
         'tasks': tasks,
         'projects': projects,
+        'statuses': statuses,
+        'priorities': priorities,
+        'users': users,
         'f_search': f_search,
-        'selected_project': selected_project
+        'selected_project': selected_project,
+        'selected_status': selected_status,
+        'selected_priority': selected_priority,
+        'selected_author': selected_author,
+        'selected_member': selected_member,
+        'prev_url': prev_url,
+        'full_path': full_path,
     }
 
     return render(request, 'tasks/index.html', context)

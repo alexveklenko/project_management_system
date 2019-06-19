@@ -1,4 +1,5 @@
 {% extends 'projects/base.html' %}
+{% load extra_tags %}
 
 {% block title %}Tasks{% endblock title %}
 
@@ -15,12 +16,12 @@
     <label class="sr-only" for="search">Name</label>
     <input type="text"
            name="search"
-           class="form-control mr-2"
+           class="form-control mr-2 mb-2"
            id="search"
            placeholder="Search"
            value="{{ f_search }}">
 
-    <select name="project" class="select form-control mr-2">
+    <select name="project" class="select form-control mr-2 mb-2">
       <option value="all">All projects</option>
       {% for project in projects %}
         <option value="{{ project.id }}" {% if selected_project == project.id %}selected{% endif %}>
@@ -29,17 +30,59 @@
       {% endfor %}
     </select>
 
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <select name="author" class="select form-control mr-2 mb-2">
+      <option value="all">All authors</option>
+      {% for user in users %}
+        <option value="{{ user.id }}" {% if selected_author == user.id %}selected{% endif %}>
+          {{ user.username }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="member" class="select form-control mr-2 mb-2">
+      <option value="all" selected>All members</option>
+      {% for user in users %}
+        <option value="{{ user.id }}" {% if selected_member == user.id %}selected{% endif %}>
+          {{ user.username }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="status" class="select form-control mr-2 mb-2">
+      <option value="all">All statuses</option>
+      {% for status in statuses %}
+        <option value="{{ status.id }}" {% if selected_status == status.id %}selected{% endif %}>
+          {{ status.title }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="priority" class="select form-control mr-2 mb-2">
+      <option value="all">All priorities</option>
+      {% for priority in priorities %}
+        <option value="{{ priority.id }}" {% if selected_priority == priority.id %}selected{% endif %}>
+          {{ priority.title }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary mr-2 mb-2">
+      <span data-feather="filter" class="mr-2"></span>Filter
+    </button>
+    <a href="{% url 'tasks:tasks' %}" class="btn btn-danger mb-2">
+      <span data-feather="delete" class="mr-2"></span>Reset
+    </a>
   </form>
 
   {% if tasks %}
     <div class="table-responsive">
-      <table class="table table-striped table-sm">
+      <table class="table table-striped table-sm table-bordered">
         <thead>
           <tr>
             <th>#</th>
             <th>Title</th>
             <th>Project</th>
+            <th>Author</th>
             <th>Assigned to</th>
             <th>Status</th>
             <th>Priority</th>
@@ -53,6 +96,7 @@
               <td>{{ task.id }}</td>
               <td><a href="{% url 'tasks:task' task.id %}">{{ task.title }}</a></td>
               <td><a href="{% url 'projects:project' task.project.id %}">{{ task.project }}</a></td>
+              <td>{{ task.author }}</td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.status }}</td>
               <td>{{ task.priority }}</td>
@@ -63,6 +107,53 @@
         </tbody>
       </table>
     </div>
+
+    {% if tasks.has_other_pages %}
+
+      <ul class="pagination justify-content-center mt-4">
+
+        <li class="page-item {% if not tasks.has_previous %}disabled{% endif %}">
+          <a href="{% set_query_parameter full_path 'page' 1 %}" class="page-link">
+            <i class="fas fa-angle-double-left"></i>
+          </a>
+        </li>
+        <li class="page-item {% if not tasks.has_previous %}disabled{% endif %}">
+          <a class="page-link" href="
+            {% if tasks.has_previous %}
+              {% set_query_parameter full_path 'page' tasks.previous_page_number %}
+            {% endif %}">
+            <i class="fas fa-angle-left"></i>
+          </a>
+        </li>
+
+        {% for num in tasks.paginator.page_range %}
+          {% if tasks.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>              
+          {% elif num > tasks.number|add:'-2' and num < tasks.number|add:'2' %}
+            <li class="page-item">
+              <a class="page-link" href="{% set_query_parameter full_path 'page' num %}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+        
+        <li class="page-item {% if not tasks.has_next %}disabled{% endif %}">
+          <a class="page-link" href="
+            {% if tasks.has_next %}
+              {% set_query_parameter full_path 'page' tasks.next_page_number %}
+            {% endif %}">
+            <i class="fas fa-angle-right"></i>
+          </a>
+        </li>
+        <li class="page-item {% if not tasks.has_next %}disabled{% endif %}">
+          <a class="page-link" href="{% set_query_parameter full_path 'page' tasks.paginator.num_pages %}">
+            <i class="fas fa-angle-double-right"></i>
+          </a>
+        </li>
+      </ul>
+    {% endif %}
+
   {% else %}
     <div class="mt-2 alert alert-secondary" role="alert">No tasks found</div>
   {% endif %}
