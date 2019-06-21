@@ -96,9 +96,9 @@ def new_task(request):
             task = form.save(commit=False)
             task.author = request.user
             task.save()
-        messages.add_message(request, messages.INFO,
-                             'Task "{}" was successfully created in project "{}"'.format(task.title, task.project))
-        return redirect(reverse('tasks:tasks'))
+            messages.add_message(request, messages.INFO,
+                                 'Task "{}" was successfully created in project "{}"'.format(task.title, task.project))
+            return redirect(reverse('tasks:tasks'))
     else:
         form = TaskForm()
 
@@ -113,10 +113,23 @@ def edit_task(request, id):
     task = Task.objects.get(id=id)
 
     if request.method == 'POST':
-        pass
+        form = ProjectTaskForm(
+            request.POST, project_id=task.project.id, instance=task)
+        project = Project.objects.get(id=task.project.id)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.author = request.user
+            task.project = project
+            task.save()
+            messages.add_message(
+                request,
+                messages.INFO,
+                'Task "{}" was successfully updated in project "{}"'.format(
+                    task.title, task.project)
+            )
+            return redirect(reverse('tasks:tasks'))
+
     else:
-        print('*'*100)
-        print(task.project.id)
         form = ProjectTaskForm(project_id=task.project.id, instance=task)
 
     context = {
@@ -162,6 +175,7 @@ def log_time(request, id):
 
 
 def ajax_get_members(request):
+    # update members in create-tast-form when project is changed
     members = User.objects.filter(projects__id=request.GET['project_id'])
     choices = '<option value="" selected>---------</option>'
 

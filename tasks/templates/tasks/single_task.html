@@ -6,7 +6,7 @@
 
   <div class="d-flex align-items-center">
       <h1 class="mt-2 mr-4 d-inline-block">{{ task.title }}</h1>
-      <a href="#" class="btn btn-secondary btn-sm mr-2">
+      <a href="{% url 'tasks:edit_task' task.id %}" class="btn btn-secondary btn-sm mr-2">
         <span data-feather="edit" class="mr-2"></span>Edit task
       </a>
       <a href="{% url 'tasks:log_time' task.id %}" class="btn btn-secondary btn-sm">
