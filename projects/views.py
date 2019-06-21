@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 from .models import Project, Status
 from tasks.models import Task
@@ -37,6 +38,11 @@ def index(request):
         selected_status = int(f_status)
         projects = projects.filter(status=f_status)
 
+    paginator = Paginator(projects, 20)
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    full_path = request.get_full_path()
+
     context = {
         'projects': projects,
         'users': users,
@@ -45,6 +51,7 @@ def index(request):
         'selected_author': selected_author,
         'selected_member': selected_member,
         'selected_status': selected_status,
+        'full_path': full_path
     }
 
     return render(request, 'projects/index.html', context)

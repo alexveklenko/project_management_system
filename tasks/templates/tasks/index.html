@@ -1,4 +1,4 @@
-{% extends 'projects/base.html' %}
+{% extends 'core/base.html' %}
 {% load extra_tags %}
 
 {% block title %}Tasks{% endblock title %}
@@ -107,52 +107,8 @@
         </tbody>
       </table>
     </div>
-
-    {% if tasks.has_other_pages %}
-
-      <ul class="pagination justify-content-center mt-4">
-
-        <li class="page-item {% if not tasks.has_previous %}disabled{% endif %}">
-          <a href="{% set_query_parameter full_path 'page' 1 %}" class="page-link">
-            <i class="fas fa-angle-double-left"></i>
-          </a>
-        </li>
-        <li class="page-item {% if not tasks.has_previous %}disabled{% endif %}">
-          <a class="page-link" href="
-            {% if tasks.has_previous %}
-              {% set_query_parameter full_path 'page' tasks.previous_page_number %}
-            {% endif %}">
-            <i class="fas fa-angle-left"></i>
-          </a>
-        </li>
-
-        {% for num in tasks.paginator.page_range %}
-          {% if tasks.number == num %}
-            <li class="page-item active">
-              <span class="page-link">{{ num }}</span>
-            </li>              
-          {% elif num > tasks.number|add:'-2' and num < tasks.number|add:'2' %}
-            <li class="page-item">
-              <a class="page-link" href="{% set_query_parameter full_path 'page' num %}">{{ num }}</a>
-            </li>
-          {% endif %}
-        {% endfor %}
-        
-        <li class="page-item {% if not tasks.has_next %}disabled{% endif %}">
-          <a class="page-link" href="
-            {% if tasks.has_next %}
-              {% set_query_parameter full_path 'page' tasks.next_page_number %}
-            {% endif %}">
-            <i class="fas fa-angle-right"></i>
-          </a>
-        </li>
-        <li class="page-item {% if not tasks.has_next %}disabled{% endif %}">
-          <a class="page-link" href="{% set_query_parameter full_path 'page' tasks.paginator.num_pages %}">
-            <i class="fas fa-angle-double-right"></i>
-          </a>
-        </li>
-      </ul>
-    {% endif %}
+    
+    {% include 'core/pagination.html' with objects=tasks %}
 
   {% else %}
     <div class="mt-2 alert alert-secondary" role="alert">No tasks found</div>

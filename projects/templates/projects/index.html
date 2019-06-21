@@ -1,4 +1,4 @@
-{% extends 'projects/base.html' %}
+{% extends 'core/base.html' %}
 
 {% block title %}Projects{% endblock title %}
 
@@ -84,6 +84,9 @@
         </tbody>
       </table>
     </div>
+
+    {% include 'core/pagination.html' with objects=projects %}
+
   {% else %}
     <div class="mt-2 alert alert-secondary" role="alert">No projects found</div>    
   {% endif %}

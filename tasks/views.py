@@ -56,22 +56,10 @@ def index(request):
         selected_member = int(f_member)
         projects = projects.filter(members=f_member)
 
-    paginator = Paginator(tasks, 2)
+    paginator = Paginator(tasks, 20)
     page = request.GET.get('page')
     tasks = paginator.get_page(page)
-
-    is_paginated = tasks.has_other_pages()
     full_path = request.get_full_path()
-
-    if tasks.has_previous():
-        prev_url = f'?page={tasks.previous_page_number()}'
-    else:
-        prev_url = ''
-
-    if tasks.has_next():
-        next_url = f'?page={tasks.next_page_number()}'
-    else:
-        next_url = ''
 
     context = {
         'tasks': tasks,
@@ -85,7 +73,6 @@ def index(request):
         'selected_priority': selected_priority,
         'selected_author': selected_author,
         'selected_member': selected_member,
-        'prev_url': prev_url,
         'full_path': full_path,
     }
 
