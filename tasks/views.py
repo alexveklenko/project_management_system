@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 
 from .models import Task, Status, Priority
 from .forms import TaskForm, LogTimeForm
@@ -14,6 +15,14 @@ from time_entries.models import TimeEntry
 
 
 def index(request):
+    # send_mail(
+    #     'Subject here',
+    #     'Here is the message.',
+    #     'from@example.com',
+    #     ['alexi.veklenko@gmail.com'],
+    #     fail_silently=False
+    # )
+
     tasks = Task.objects.order_by('-id')
     projects = Project.objects.all()
     statuses = Status.objects.all()

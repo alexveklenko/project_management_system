@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'projects',
     'tasks',
     'time_entries',
+    'users',
     'crispy_forms',
     'django_select2',
 ]
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'mytasks.urls'
@@ -126,3 +128,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+SENDGRID_API_KEY = 'PS62QZVSTQOu03-mRGTLzQ'
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
