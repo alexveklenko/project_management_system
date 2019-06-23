@@ -8,6 +8,11 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="mt-2 alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
                 <div class="card mt-4">
                     <div class="card-header">
                         <h1>Login</h1>
@@ -24,7 +29,7 @@
                         </form>
                     </div>
                     <div class="card-footer text-muted">
-                        <p class="mb-0">Don't have an account yet? <a href="#">Register</a></p>
+                        <p class="mb-0">Don't have an account yet? <a href="{% url 'register' %}">Register</a></p>
                         <p class="mb-0">Forgot your password? <a href="#">Reset</a></p>
                     </div>
                 </div>
