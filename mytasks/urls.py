@@ -18,6 +18,8 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from core import views as core_views
 from users import views as user_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', core_views.index, name='startpage'),
@@ -29,4 +31,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('select2/', include('django_select2.urls')),
     path('register/', user_views.register, name='register'),
-]
+    path('profile/', user_views.profile, name="profile"),
+    path('profile/edit', user_views.edit_profile, name="edit_profile"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
