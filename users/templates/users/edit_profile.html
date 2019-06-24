@@ -1,26 +1,26 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Edit profile{% endblock title %}
+{% block title %}Profile{% endblock title %}
 
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="card mt-4">
-          <div class="card-header">
-            <h1>Update profile</h1>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              {% csrf_token %}
-              {{ u_form|crispy }}
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card mt-4">
+        <div class="card-header">
+          <h2>{{ user.username }}</h2>
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ u_form|crispy }}
             {{ p_form|crispy }}
-              <div>
-                <button type="submit" class="btn btn-primary">Update</button>
-              </div>
-            </form>
-          </div>
+
+            <div>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

@@ -3,16 +3,16 @@
 
 {% block title %}Profile{% endblock title %}
 
-{% block content %}  
+{% block content %}
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-8 offset-lg-2">
       <div class="card mt-4">
         <div class="card-header">
           <h2>{{ user.username }}</h2>
         </div>
         <div class="card-body">
           <div class="media">
-            <img src="{{ user.profile.image.url }}" class="align-self-start mr-3" alt="{{ user.username }}" style="width: 200px;">
+            <img src="{{ user.profile.image.avatar.url }}" class="align-self-start mr-3" alt="{{ user.username }}" style="width: 200px;">
             <div class="media-body text-center">
               <ul class="list-group list-group-flush mb-5">
                 <li class="list-group-item">{{ user.email }}</li>

@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import dj_database_url
+from google.oauth2 import service_account
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3&f$sb3d(va@1m=$+f-p=t3%m95g6@xc%91w$=91@h_qi(@wa8'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'NO') == 'YES'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     'users',
     'crispy_forms',
     'django_select2',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [
@@ -82,10 +86,7 @@ WSGI_APPLICATION = 'mytasks.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(default=os.environ['DATABASE_URL'])
 }
 
 
@@ -136,10 +137,24 @@ LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 
-SENDGRID_API_KEY = 'PS62QZVSTQOu03-mRGTLzQ'
+SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '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'
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (200, 200), 'crop': True},
+    },
+}
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+THUMBNAIL_DEFAULT_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = os.environ['GS_BUCKET_NAME']
+GS_PROJECT_ID = os.environ['GS_PROJECT_ID']
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+    json.loads(os.environ['GS_CREDENTIALS'])
+)
