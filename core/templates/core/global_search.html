@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Search{% endblock title %}
+
+{% block content %}
+  <h1 class="mt-2 mb-4">Search results</h1>
+  
+  {% if projects %}
+    <h2 class="h3">Projects</h2>
+    {% include 'projects/projects_list.html' %}
+  {% endif %}
+
+  {% if tasks %}
+    <h2 class="h3">Tasks</h2>
+    {% include 'tasks/tasks_list.html' %}
+  {% endif %}
+
+  {% if time_entries %}
+    <h2 class="h3">Spent time</h2>
+    {% include 'time_entries/time_entries_list.html' %}
+  {% endif %}
+
+  {% if not projects and not tasks and not time_entries %}
+    <div class="mt-2 alert alert-secondary" role="alert">Nothing found by your search request</div>
+  {% endif %}
+{% endblock content %}

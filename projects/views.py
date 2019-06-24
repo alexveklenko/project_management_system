@@ -89,7 +89,7 @@ def edit_project(request, id):
             form.save()
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
-            return redirect(reverse('project', args=[project.id]))
+            return redirect(reverse('projects:project', args=[project.id]))
     else:
         form = ProjectForm(instance=project)
 

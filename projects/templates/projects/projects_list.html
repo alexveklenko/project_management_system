@@ -1,0 +1,28 @@
+<div class="table-responsive">
+  <table class="table table-striped table-sm table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Members</th>
+        <th>Status</th>
+        <th>Spent time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+        <tr>
+          <td>{{ project.id }}</td>
+          <td><a href="{% url 'projects:project' project.id %}">{{ project.title }}</a></td>
+          <td>{{ project.author }}</td>
+          <td>
+            {{ project.members.all|join:', '}}
+          </td>
+          <td>{{ project.status }}</td>
+          <td>{{ project.spent_time }}</td>
+        </tr>
+      {% endfor %}            
+    </tbody>
+  </table>
+</div>
