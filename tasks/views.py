@@ -92,10 +92,12 @@ def task_view(request, id):
     task = Task.objects.get(id=id)
     time_entries = TimeEntry.objects.filter(task=task.id)
     user_can_edit = request.user.is_superuser or request.user == task.assigned_to
+    user_can_log_time = request.user == task.assigned_to
     context = {
         'task': task,
         'time_entries': time_entries,
         'user_can_edit': user_can_edit,
+        'user_can_log_time': user_can_log_time,
     }
     return render(request, 'tasks/single_task.html', context)
 

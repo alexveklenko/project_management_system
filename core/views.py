@@ -7,8 +7,10 @@ from time_entries.models import TimeEntry
 
 
 def index(request):
-    projects = Project.objects.filter(members=request.user)
-    tasks = Task.objects.filter(assigned_to=request.user)
+    projects = Project.objects.filter(
+        members=request.user).order_by('-added')[:10]
+    tasks = Task.objects.filter(
+        assigned_to=request.user).order_by('-added')[:10]
     context = {
         'projects': projects,
         'tasks': tasks,

@@ -10,7 +10,7 @@
           tabindex="0" 
           data-toggle="tooltip"
           data-placement="bottom"
-          {% if not user.is_superuser %}title="This task is assigned to another person"{% endif %}>      
+          {% if not user_can_edit %}title="This task is assigned to another person"{% endif %}>      
       <a href="{% url 'tasks:edit_task' task.id %}"
          class="btn btn-secondary btn-sm mr-2 {% if not user_can_edit %}disabled{% endif %}">
         <span data-feather="edit" class="mr-2"></span>Edit task
@@ -21,9 +21,9 @@
           tabindex="0" 
           data-toggle="tooltip"
           data-placement="bottom"
-          {% if not user.is_superuser %}title="This task is assigned to another person"{% endif %}>      
+          {% if not user_can_log_time %}title="This task is assigned to another person"{% endif %}>      
       <a href="{% url 'tasks:log_time' task.id %}"
-         class="btn btn-secondary btn-sm {% if not user_can_edit %}disabled{% endif %}">
+         class="btn btn-secondary btn-sm {% if not user_can_log_time %}disabled{% endif %}">
         <span data-feather="clock" class="mr-2"></span>Log time
       </a>
     </span>
