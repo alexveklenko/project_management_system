@@ -77,7 +77,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <a class="nav-link {% if 'users' in request.path %}active{% endif %}" href="{% url 'users:users' %}">
                     <span data-feather="users"></span>
                     Users
                   </a>

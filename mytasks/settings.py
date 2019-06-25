@@ -140,6 +140,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 

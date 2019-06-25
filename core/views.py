@@ -11,9 +11,12 @@ def index(request):
         members=request.user).order_by('-added')[:10]
     tasks = Task.objects.filter(
         assigned_to=request.user).order_by('-added')[:10]
+    time_entries_list = TimeEntry.objects.filter(
+        author=request.user).order_by('-added')[:10]
     context = {
         'projects': projects,
         'tasks': tasks,
+        'time_entries_list': time_entries_list,
     }
     return render(request, 'core/index.html', context)
 

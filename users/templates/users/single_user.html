@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block title %}User | {{ user.username }}{% endblock title %}
+
+{% block content %}
+  <div class="row align-items-center mt-3 mb-3">
+    <div class="col-sm-2">
+      <img src="{{ user.profile.image.avatar.url }}" class="align-self-start mr-3" alt="{{ user.username }}" style="max-width: 200px; width: 100%;">
+    </div>
+    <div class="col-sm-10">
+      <ul class="mb-0">
+        <li><b>User: </b>{{ user.username }}</li>
+        {% if user.first_name and user.last_name %}
+        <li><b>Fullname: </b>{{ user.first_name }} {{ user.last_name }}</li>
+        {% endif %}
+        <li><b>Email: </b>{{ user.email }}</li>
+        <li><b>Joined: </b>{{ user.date_joined|date:'d M Y' }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="h3 mt-4">{{ user.username }} | latest projects</h2>
+  {% if projects %}        
+    {% include 'projects/projects_list.html' %}
+  {% else %}
+    <div class="mt-2 alert alert-secondary" role="alert">No projects found</div>    
+  {% endif %}
+
+  <h2 class="h3 mt-4">{{ user.username }} | latest tasks</h2>
+  {% if tasks %}        
+    {% include 'tasks/tasks_list.html' %}
+  {% else %}
+    <div class="mt-2 alert alert-secondary" role="alert">No tasks found</div>
+  {% endif %}
+
+  <h2 class="h3 mt-3">{{ user.username }} | timesheet</h2>
+    {% if time_entries %}
+      {% include 'time_entries/time_entries_list.html' %}
+    {% else %}
+      <div class="mt-2 alert alert-secondary" role="alert">No spent time yet</div>
+    {% endif %}
+{% endblock content %}

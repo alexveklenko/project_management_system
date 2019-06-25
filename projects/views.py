@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 
 from .models import Project, Status
 from tasks.models import Task
@@ -98,7 +99,23 @@ def edit_project(request, id):
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
+
+            members = form.cleaned_data['members']
+            emails = []
+
+            for member in members:
+                emails.append(member.email)
+
             form.save()
+
+            # send_mail(
+            #     'New project member',
+            #     'You have been added to project',
+            #     'omgtasks@example.com',
+            #     'alexi.veklenko@gmail.com',
+            #     fail_silently=False
+            # )
+
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
             return redirect(reverse('projects:project', args=[project.id]))

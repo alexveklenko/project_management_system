@@ -1,9 +1,36 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-
+from projects.views import Project
+from tasks.views import Task
+from time_entries.views import TimeEntry
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+
+
+def index(request):
+    users = User.objects.all()
+    context = {
+        'users': users,
+    }
+    return render(request, 'users/index.html', context)
+
+
+def user_view(request, id):
+    user = get_object_or_404(User, id=id)
+    projects = Project.objects.filter(
+        members=user).order_by('-added')[:10]
+    tasks = Task.objects.filter(
+        assigned_to=user).order_by('-added')[:10]
+    time_entries = TimeEntry.objects.filter(
+        author=user).order_by('-added')[:10]
+    context = {
+        'user': user,
+        'projects': projects,
+        'tasks': tasks,
+        'time_entries': time_entries,
+    }
+    return render(request, 'users/single_user.html', context)
 
 
 def register(request):

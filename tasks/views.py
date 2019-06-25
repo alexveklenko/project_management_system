@@ -15,14 +15,6 @@ from time_entries.models import TimeEntry
 
 
 def index(request):
-    # send_mail(
-    #     'Subject here',
-    #     'Here is the message.',
-    #     'from@example.com',
-    #     ['alexi.veklenko@gmail.com'],
-    #     fail_silently=False
-    # )
-
     tasks = Task.objects.order_by('-id')
     projects = Project.objects.all()
     statuses = Status.objects.all()

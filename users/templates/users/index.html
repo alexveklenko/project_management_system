@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+{% for user in users %}
+<div class="row align-items-center mt-3 mb-3">
+  <div class="col-sm-1">
+    <img src="{{ user.profile.image.avatar.url }}" class="align-self-start mr-3" alt="{{ user.username }}" style="max-width: 100px; width: 100%;">
+  </div>
+  <div class="col-sm-3">
+    <ul class="mb-0">
+      <li>
+        <a href="{% url 'users:user' user.id %}">{{ user.username }}</a>
+      </li>
+      <li>{{ user.email }}</li>
+    </ul>
+  </div>
+</div>
+{% endfor %}
+{% endblock content %}
+
+
+

@@ -29,6 +29,7 @@ urlpatterns = [
     path('projects/', include('projects.urls')),
     path('tasks/', include('tasks.urls')),
     path('spent_time/', include('time_entries.urls')),
+    path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('select2/', include('django_select2.urls')),
     path('register/', user_views.register, name='register'),
