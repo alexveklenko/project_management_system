@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -60,11 +60,20 @@ def index(request):
 def project_view(request, id):
     project = get_object_or_404(Project, id=id)
     tasks = Task.objects.filter(project=id)
+    user_can_add_task = request.user.is_superuser or request.user in project.members.all()
+    context = {
+        'project': project,
+        'tasks': tasks,
+        'user_can_add_task': user_can_add_task
+    }
 
-    return render(request, 'projects/single_project.html', {'project': project, 'tasks': tasks})
+    return render(request, 'projects/single_project.html', context)
 
 
 def new_project(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden('Access denied')
+
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
@@ -82,6 +91,9 @@ def new_project(request):
 
 def edit_project(request, id):
     project = get_object_or_404(Project, id=id)
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden('Access denied')
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
@@ -101,8 +113,12 @@ def edit_project(request, id):
 
 
 def new_task(request, project_id):
-
     project = Project.objects.get(id=project_id)
+    members = project.members.all()
+
+    if not request.user.is_superuser and not request.user in members:
+        return HttpResponseForbidden('Access denied')
+
     if request.method == 'POST':
         form = TaskForm(request.POST, project_id=project_id)
         if form.is_valid():

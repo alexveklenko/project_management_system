@@ -4,4 +4,6 @@
   "use strict";
 
   feather.replace();
+
+  $('[data-toggle="tooltip"]').tooltip();
 })();

@@ -7,7 +7,13 @@ from time_entries.models import TimeEntry
 
 
 def index(request):
-    return render(request, 'core/index.html', {})
+    projects = Project.objects.filter(members=request.user)
+    tasks = Task.objects.filter(assigned_to=request.user)
+    context = {
+        'projects': projects,
+        'tasks': tasks,
+    }
+    return render(request, 'core/index.html', context)
 
 
 def global_search(request):

@@ -7,9 +7,17 @@
 
   <div class="d-flex align-items-center mb-4">
     <h1 class="mt-2 mr-4 d-inline-block">Tasks</h1>
-    <a href="{% url 'tasks:new_task' %}" class="btn btn-secondary btn-sm">
-      <span data-feather="plus-circle" class="mr-2"></span>New task
-    </a>
+    
+    <span class="d-inline-block" 
+          tabindex="0" 
+          data-toggle="tooltip"
+          data-placement="bottom"
+          {% if not user.is_superuser %}title="You can add task from project page. If you member of project"{% endif %}>
+      <a href="{% url 'tasks:new_task' %}"
+         class="btn btn-secondary btn-sm {% if not user.is_superuser %}disabled{% endif %}">
+        <span data-feather="plus-circle" class="mr-2"></span>New task
+      </a>
+    </span>
   </div>
 
   <form method="get" class="form-inline mb-2">

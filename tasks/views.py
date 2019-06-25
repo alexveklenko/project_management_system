@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 
@@ -91,14 +91,19 @@ def index(request):
 def task_view(request, id):
     task = Task.objects.get(id=id)
     time_entries = TimeEntry.objects.filter(task=task.id)
+    user_can_edit = request.user.is_superuser or request.user == task.assigned_to
     context = {
         'task': task,
-        'time_entries': time_entries
+        'time_entries': time_entries,
+        'user_can_edit': user_can_edit,
     }
     return render(request, 'tasks/single_task.html', context)
 
 
 def new_task(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden('Access denied')
+
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -120,6 +125,8 @@ def new_task(request):
 
 def edit_task(request, id):
     task = Task.objects.get(id=id)
+    if not request.user.is_superuser and request.user != task.assigned_to:
+        return HttpResponseForbidden('Access denied')
 
     if request.method == 'POST':
         form = ProjectTaskForm(
@@ -149,11 +156,15 @@ def edit_task(request, id):
 
 
 def log_time(request, id):
+    task = Task.objects.get(id=id)
+    project = Project.objects.get(id=task.project.id)
+
+    if request.user != task.assigned_to:
+        return HttpResponseForbidden('Access denied')
+
     if request.method == 'POST':
         form = LogTimeForm(request.POST)
         if form.is_valid():
-            task = Task.objects.get(id=id)
-            project = Project.objects.get(id=task.project.id)
             time_entry = form.save(commit=False)
             time_entry.author = request.user
             time_entry.task = task
