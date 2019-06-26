@@ -81,8 +81,24 @@ def new_project(request):
             project = form.save(commit=False)
             project.author = request.user
             project.save()
+            form.save_m2m()
+
+            members = form.cleaned_data['members']
+            emails = [member.email for member in members]
+
+            send_mail(
+                'New project member',
+                'You have been added to project <' + project.title + '>',
+                'omgtasks@example.com',
+                emails,
+                fail_silently=False
+            )
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully created'.format(project.title))
+            messages.add_message(request, messages.INFO,
+                                 'Notification email has been sent to {}'.format(
+                                     ', '.join(emails)
+                                 ))
             return redirect('/projects')
     else:
         form = ProjectForm()
@@ -132,10 +148,13 @@ def edit_project(request, id):
 
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
-            messages.add_message(request, messages.INFO,
-                                 'Notification email has been sent to {}'.format(
-                                     ', '.join(added_emails + removed_emails)
-                                 ))
+
+            if removed_emails or added_emails:
+                messages.add_message(request, messages.INFO,
+                                     'Notification email has been sent to {}'.format(
+                                         ', '.join(added_emails +
+                                                   removed_emails)
+                                     ))
             return redirect(reverse('projects:project', args=[project.id]))
     else:
         form = ProjectForm(instance=project)
