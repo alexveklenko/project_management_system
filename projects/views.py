@@ -108,13 +108,13 @@ def edit_project(request, id):
 
             form.save()
 
-            # send_mail(
-            #     'New project member',
-            #     'You have been added to project',
-            #     'omgtasks@example.com',
-            #     'alexi.veklenko@gmail.com',
-            #     fail_silently=False
-            # )
+            send_mail(
+                'New project member',
+                'You have been added to project',
+                'omgtasks@example.com',
+                ['alexi.veklenko@gmail.com'],
+                fail_silently=False
+            )
 
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
