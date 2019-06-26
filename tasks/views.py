@@ -57,7 +57,7 @@ def index(request):
         selected_member = int(f_member)
         projects = projects.filter(members=f_member)
 
-    paginator = Paginator(tasks, 20)
+    paginator = Paginator(tasks, 10)
     page = request.GET.get('page')
     tasks = paginator.get_page(page)
     full_path = request.get_full_path()
