@@ -100,24 +100,42 @@ def edit_project(request, id):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
 
-            members = form.cleaned_data['members']
-            emails = []
-
-            for member in members:
-                emails.append(member.email)
+            # check for updates in members
+            old_members = project.members.all()
+            new_members = form.cleaned_data['members']
+            old_emails = [member.email for member in old_members]
+            new_emails = [member.email for member in new_members]
+            added_emails = [
+                email for email in new_emails if email not in old_emails]
+            removed_emails = [
+                email for email in old_emails if email not in new_emails]
 
             form.save()
 
-            send_mail(
-                'New project member',
-                'You have been added to project',
-                'omgtasks@example.com',
-                ['alexi.veklenko@gmail.com'],
-                fail_silently=False
-            )
+            if added_emails:
+                send_mail(
+                    'New project member',
+                    'You have been added to project <' + project.title + '>',
+                    'omgtasks@example.com',
+                    added_emails,
+                    fail_silently=False
+                )
+
+            if removed_emails:
+                send_mail(
+                    'Removed from project',
+                    'You have been removed from project <' + project.title + '>',
+                    'omgtasks@example.com',
+                    removed_emails,
+                    fail_silently=False
+                )
 
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
+            messages.add_message(request, messages.INFO,
+                                 'Notification email has been sent to {}'.format(
+                                     ', '.join(added_emails + removed_emails)
+                                 ))
             return redirect(reverse('projects:project', args=[project.id]))
     else:
         form = ProjectForm(instance=project)
