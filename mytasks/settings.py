@@ -139,13 +139,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+# SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+# EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -162,3 +162,10 @@ GS_PROJECT_ID = os.environ['GS_PROJECT_ID']
 GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
     json.loads(os.environ['GS_CREDENTIALS'])
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+SMTP_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']

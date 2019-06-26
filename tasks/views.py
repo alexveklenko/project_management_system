@@ -103,9 +103,22 @@ def new_task(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.author = request.user
+
             task.save()
+
+            send_mail(
+                'Task assignment',
+                f'Task <{task.title}> has been assigned to you. Project: <{task.project.title}>',
+                'omgtasks@example.com',
+                [task.assigned_to.email],
+                fail_silently=False
+            )
+
             messages.add_message(request, messages.INFO,
                                  'Task "{}" was successfully created in project "{}"'.format(task.title, task.project))
+            messages.add_message(request, messages.INFO,
+                                 'Assignment email has been sent to <{}>'.format(task.assigned_to.email))
+
             return redirect(reverse('tasks:tasks'))
     else:
         form = TaskForm()

@@ -108,6 +108,9 @@ def new_project(request):
 
 def edit_project(request, id):
     project = get_object_or_404(Project, id=id)
+    old_status = project.status
+    old_members = project.members.all()
+    old_emails = [member.email for member in old_members]
 
     if not request.user.is_superuser:
         return HttpResponseForbidden('Access denied')
@@ -117,14 +120,15 @@ def edit_project(request, id):
         if form.is_valid():
 
             # check for updates in members
-            old_members = project.members.all()
+            new_status = form.cleaned_data['status']
             new_members = form.cleaned_data['members']
-            old_emails = [member.email for member in old_members]
             new_emails = [member.email for member in new_members]
             added_emails = [
                 email for email in new_emails if email not in old_emails]
             removed_emails = [
                 email for email in old_emails if email not in new_emails]
+
+            print(old_status == new_status)
 
             form.save()
 
@@ -146,15 +150,31 @@ def edit_project(request, id):
                     fail_silently=False
                 )
 
+            if old_status != new_status:
+                send_mail(
+                    project.title,
+                    f'Project\'s status has been changed from <{old_status.title}> to <{new_status.title}>',
+                    'omgtasks@example.com',
+                    new_emails,
+                    fail_silently=False
+                )
+
             messages.add_message(request, messages.INFO,
                                  'Project "{}" was successfully updated'.format(project.title))
 
             if removed_emails or added_emails:
                 messages.add_message(request, messages.INFO,
-                                     'Notification email has been sent to {}'.format(
+                                     'Assignment email has been sent to {}'.format(
                                          ', '.join(added_emails +
                                                    removed_emails)
                                      ))
+            if old_status != new_status:
+                messages.add_message(request, messages.INFO,
+                                     'Status email has been sent to {}'.format(
+                                         ', '.join(added_emails +
+                                                   removed_emails)
+                                     ))
+
             return redirect(reverse('projects:project', args=[project.id]))
     else:
         form = ProjectForm(instance=project)
@@ -180,8 +200,20 @@ def new_task(request, project_id):
             task.author = request.user
             task.project = project
             task.save()
+
+            send_mail(
+                'Task assignment',
+                f'Task <{task.title}> has been assigned to you. Project: <{task.project.title}>',
+                'omgtasks@example.com',
+                [task.assigned_to.email],
+                fail_silently=False
+            )
+
             messages.add_message(request, messages.INFO,
                                  'Task "{}" was successfully created in project "{}"'.format(task.title, project.title))
+            messages.add_message(request, messages.INFO,
+                                 'Assignment email has been sent to <{}>'.format(task.assigned_to.email))
+
             return redirect(reverse('projects:project', args=[project_id]))
         pass
     else:
